@@ -5,6 +5,8 @@ import { revalidatePath } from "next/cache"
 import { getCustomerById } from "@/lib/customers-store"
 import { requireUser } from "@/lib/auth"
 import { canAccessByOwnership } from "@/lib/permissions"
+import { readActivities, writeActivities } from "@/lib/activities-store"
+import { readUsers } from "@/lib/users-store"
 import {
   getProjectById,
   readProjects,
@@ -82,6 +84,33 @@ export async function createProject(values: ProjectFormValues): Promise<ActionRe
 
   revalidatePath("/projects")
   revalidatePath(`/projects/${id}`)
+  return { ok: true, id }
+}
+
+export async function deleteProject(id: string): Promise<ActionResult> {
+  const currentUser = await requireUser()
+  if (!currentUser) return { ok: false, message: "未登录或账号无效" }
+
+  const existing = await getProjectById(id)
+  if (!existing) return { ok: false, message: "项目不存在" }
+  if (currentUser.role !== "admin") {
+    const allUsers = await readUsers()
+    if (!canAccessByOwnership(currentUser, existing.ownerId, allUsers)) {
+      return { ok: false, message: "无权限操作该项目" }
+    }
+  }
+
+  const [allProjects, allActivities] = await Promise.all([
+    readProjects(),
+    readActivities(),
+  ])
+  const nextProjects = allProjects.filter((p) => p.id !== id)
+  const nextActivities = allActivities.filter((a) => a.projectId !== id)
+  await writeProjects(nextProjects)
+  await writeActivities(nextActivities)
+
+  revalidatePath("/projects")
+  revalidatePath("/activities")
   return { ok: true, id }
 }
 

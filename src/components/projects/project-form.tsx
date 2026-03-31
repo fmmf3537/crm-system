@@ -6,7 +6,11 @@ import { useRouter } from "next/navigation"
 import { useMemo, useTransition } from "react"
 import { useForm } from "react-hook-form"
 
-import { createProject, updateProject } from "@/app/projects/actions"
+import {
+  createProject,
+  deleteProject,
+  updateProject,
+} from "@/app/projects/actions"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
@@ -109,6 +113,20 @@ export function ProjectForm(props: Props) {
       }
 
       router.push(`/projects/${result.id}`)
+      router.refresh()
+    })
+  }
+
+  function handleDelete() {
+    if (props.mode !== "edit") return
+    if (!confirm("确定要删除该项目吗？")) return
+    startTransition(async () => {
+      const result = await deleteProject(props.project.id)
+      if (!result.ok) {
+        form.setError("root", { message: result.message })
+        return
+      }
+      router.push("/projects")
       router.refresh()
     })
   }
@@ -371,6 +389,16 @@ export function ProjectForm(props: Props) {
               <Button type="submit" disabled={pending}>
                 {pending ? "提交中..." : "保存"}
               </Button>
+              {props.mode === "edit" ? (
+                <Button
+                  type="button"
+                  variant="destructive"
+                  disabled={pending}
+                  onClick={handleDelete}
+                >
+                  删除项目
+                </Button>
+              ) : null}
               <Button type="button" variant="outline" asChild>
                 <Link href="/projects">返回列表</Link>
               </Button>

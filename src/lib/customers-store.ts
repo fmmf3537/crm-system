@@ -42,7 +42,6 @@ export async function writeCustomers(customers: Customer[]): Promise<void> {
       createdAt: new Date(c.createdAt),
       updatedAt: new Date(c.updatedAt),
     })),
-    skipDuplicates: true,
   })
 }
 

@@ -6,7 +6,11 @@ import { useRouter } from "next/navigation"
 import { useTransition } from "react"
 import { useForm } from "react-hook-form"
 
-import { createCustomer, updateCustomer } from "@/app/customers/actions"
+import {
+  createCustomer,
+  deleteCustomer,
+  updateCustomer,
+} from "@/app/customers/actions"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -93,6 +97,20 @@ export function CustomerForm(props: Props) {
       }
 
       router.push(`/customers/${res.id}`)
+      router.refresh()
+    })
+  }
+
+  function handleDelete() {
+    if (props.mode !== "edit") return
+    if (!confirm("确定要删除该客户吗？")) return
+    startTransition(async () => {
+      const res = await deleteCustomer(props.customer.id)
+      if (!res.ok) {
+        form.setError("root", { message: res.message })
+        return
+      }
+      router.push("/customers")
       router.refresh()
     })
   }
@@ -321,6 +339,16 @@ export function CustomerForm(props: Props) {
               <Button type="submit" disabled={pending}>
                 {pending ? "提交中…" : "保存"}
               </Button>
+              {props.mode === "edit" ? (
+                <Button
+                  type="button"
+                  variant="destructive"
+                  disabled={pending}
+                  onClick={handleDelete}
+                >
+                  删除客户
+                </Button>
+              ) : null}
               <Button type="button" variant="outline" asChild>
                 <Link href="/customers">返回列表</Link>
               </Button>

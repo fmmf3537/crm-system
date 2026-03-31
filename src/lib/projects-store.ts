@@ -1,6 +1,15 @@
 import type { Project } from "@/types/project"
 import { prisma } from "@/lib/prisma"
 
+function parseStageHistory(raw: string): Project["stageHistory"] {
+  try {
+    const parsed = JSON.parse(raw)
+    return Array.isArray(parsed) ? (parsed as Project["stageHistory"]) : []
+  } catch {
+    return []
+  }
+}
+
 export async function readProjects(): Promise<Project[]> {
   const rows = await prisma.project.findMany({
     orderBy: { updatedAt: "desc" },
@@ -18,7 +27,7 @@ export async function readProjects(): Promise<Project[]> {
     owner: p.owner,
     keyFactor: p.keyFactor,
     risk: p.risk,
-    stageHistory: (p.stageHistory as unknown as Project["stageHistory"]) ?? [],
+    stageHistory: parseStageHistory(p.stageHistory),
     createdAt: p.createdAt.toISOString(),
     updatedAt: p.updatedAt.toISOString(),
   }))
@@ -40,11 +49,10 @@ export async function writeProjects(projects: Project[]): Promise<void> {
       owner: p.owner,
       keyFactor: p.keyFactor,
       risk: p.risk,
-      stageHistory: p.stageHistory as unknown as object,
+      stageHistory: JSON.stringify(p.stageHistory ?? []),
       createdAt: new Date(p.createdAt),
       updatedAt: new Date(p.updatedAt),
     })),
-    skipDuplicates: true,
   })
 }
 
@@ -66,7 +74,7 @@ export async function getProjectById(id: string): Promise<Project | null> {
     owner: p.owner,
     keyFactor: p.keyFactor,
     risk: p.risk,
-    stageHistory: (p.stageHistory as unknown as Project["stageHistory"]) ?? [],
+    stageHistory: parseStageHistory(p.stageHistory),
     createdAt: p.createdAt.toISOString(),
     updatedAt: p.updatedAt.toISOString(),
   }

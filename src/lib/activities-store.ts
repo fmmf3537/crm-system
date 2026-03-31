@@ -36,7 +36,6 @@ export async function writeActivities(activities: Activity[]): Promise<void> {
       owner: a.owner,
       createdAt: new Date(a.createdAt),
     })),
-    skipDuplicates: true,
   })
 }
 

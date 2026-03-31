@@ -7,6 +7,7 @@ import {
   readCustomers,
   writeCustomers,
 } from "@/lib/customers-store"
+import { readProjects } from "@/lib/projects-store"
 import { requireUser } from "@/lib/auth"
 import { canAccessByOwnership } from "@/lib/permissions"
 import { readUsers } from "@/lib/users-store"
@@ -106,6 +107,36 @@ export async function updateCustomer(
 
   revalidatePath("/customers")
   revalidatePath(`/customers/${id}`)
+
+  return { ok: true, id }
+}
+
+export async function deleteCustomer(id: string): Promise<ActionResult> {
+  const currentUser = await requireUser()
+  if (!currentUser) {
+    return { ok: false, message: "未登录或账号无效" }
+  }
+
+  const existing = await getCustomerById(id)
+  if (!existing) {
+    return { ok: false, message: "客户不存在" }
+  }
+  if (currentUser.role !== "admin") {
+    const allUsers = await readUsers()
+    if (!canAccessByOwnership(currentUser, existing.ownerId, allUsers)) {
+      return { ok: false, message: "无权限操作该客户" }
+    }
+  }
+
+  const projects = await readProjects()
+  if (projects.some((p) => p.customerId === id)) {
+    return { ok: false, message: "该客户下存在项目，无法删除" }
+  }
+
+  const all = await readCustomers()
+  const next = all.filter((c) => c.id !== id)
+  await writeCustomers(next)
+  revalidatePath("/customers")
 
   return { ok: true, id }
 }

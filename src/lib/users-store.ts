@@ -41,7 +41,6 @@ export async function writeUsers(users: User[]): Promise<void> {
       createdAt: new Date(u.createdAt),
       updatedAt: new Date(u.updatedAt),
     })),
-    skipDuplicates: true,
   })
 }
 
