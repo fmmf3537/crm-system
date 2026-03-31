@@ -1,0 +1,43 @@
+name: Test
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  unit-api:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run prisma:generate
+      - run: npx prisma migrate deploy
+        env:
+          DATABASE_URL: file:./dev.db
+      - run: npm run test
+      - run: npm run test:api
+
+  e2e:
+    runs-on: ubuntu-latest
+    needs: unit-api
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run prisma:generate
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+        env:
+          DATABASE_URL: file:./dev.db
+          TEST_DATABASE_URL: file:./test.db
+          TEST_JWT_SECRET: test-secret
+

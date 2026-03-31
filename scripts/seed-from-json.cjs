@@ -32,7 +32,6 @@ async function seedUsers() {
     return
   }
   console.log(`导入用户：${users.length} 条`)
-  await prisma.user.deleteMany()
   await prisma.user.createMany({
     data: users.map((u) => ({
       id: u.id,
@@ -59,7 +58,6 @@ async function seedCustomers() {
     return
   }
   console.log(`导入客户：${customers.length} 条`)
-  await prisma.customer.deleteMany()
   await prisma.customer.createMany({
     data: customers.map((c) => ({
       id: c.id,
@@ -87,7 +85,6 @@ async function seedProjects() {
     return
   }
   console.log(`导入项目：${projects.length} 条`)
-  await prisma.project.deleteMany()
   await prisma.project.createMany({
     data: projects.map((p) => ({
       id: p.id,
@@ -116,7 +113,6 @@ async function seedActivities() {
     return
   }
   console.log(`导入跟进记录：${activities.length} 条`)
-  await prisma.activity.deleteMany()
   await prisma.activity.createMany({
     data: activities.map((a) => ({
       id: a.id,
@@ -136,6 +132,10 @@ async function seedActivities() {
 
 async function main() {
   console.log("开始从 data/*.json 导入到数据库（会清空对应表）")
+  await prisma.activity.deleteMany()
+  await prisma.project.deleteMany()
+  await prisma.customer.deleteMany()
+  await prisma.user.deleteMany()
   await seedUsers()
   await seedCustomers()
   await seedProjects()
