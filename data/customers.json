@@ -1,0 +1,20 @@
+[
+  {
+    "name": "测试客户",
+    "shortName": "测试",
+    "type": "政府",
+    "industry": [
+      "能源",
+      "交通"
+    ],
+    "level": "A战略",
+    "region": "西安市",
+    "contactName": "张三",
+    "contactPosition": "副总",
+    "contactPhone": "19888888888",
+    "rating": 5,
+    "id": "917a062d-2ab8-4383-9b82-0e987b0a3daf",
+    "createdAt": "2026-03-31T05:50:06.730Z",
+    "updatedAt": "2026-03-31T05:50:06.730Z"
+  }
+]

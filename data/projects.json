@@ -1,0 +1,25 @@
+[
+  {
+    "id": "c26f7ee7-a721-4448-bfbe-de65957f96d6",
+    "name": "测试项目",
+    "customerId": "917a062d-2ab8-4383-9b82-0e987b0a3daf",
+    "type": "招投标",
+    "stage": "线索",
+    "expectedAmount": 10000,
+    "actualAmount": 100000,
+    "expectedDate": "2026-03-31",
+    "owner": "小马",
+    "keyFactor": "测试",
+    "risk": "测试",
+    "stageHistory": [
+      {
+        "stage": "线索",
+        "changedAt": "2026-03-31T05:59:28.306Z",
+        "reason": "创建项目",
+        "operator": "小马"
+      }
+    ],
+    "createdAt": "2026-03-31T05:59:28.306Z",
+    "updatedAt": "2026-03-31T05:59:28.306Z"
+  }
+]

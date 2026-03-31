@@ -1,0 +1,92 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String   @id @default(cuid())
+  username   String   @unique
+  email      String   @unique
+  password   String
+  avatarUrl  String?
+  name       String
+  role       String
+  teamId     String?
+  department String
+  phone      String
+  status     String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // relations
+  ownedCustomers Customer[] @relation("UserCustomers")
+  ownedProjects  Project[]  @relation("UserProjects")
+  ownedActivities Activity[] @relation("UserActivities")
+}
+
+model Customer {
+  id              String    @id @default(cuid())
+  ownerId         String?
+  owner           User?     @relation("UserCustomers", fields: [ownerId], references: [id])
+  name            String
+  shortName       String
+  type            String
+  industry        String    // stored as JSON string of string[]
+  level           String
+  region          String
+  contactName     String
+  contactPosition String
+  contactPhone    String
+  rating          Int
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  projects        Project[]
+  activities      Activity[]
+}
+
+model Project {
+  id            String           @id @default(cuid())
+  ownerId       String?
+  ownerUser     User?            @relation("UserProjects", fields: [ownerId], references: [id])
+  name          String
+  customerId    String
+  customer      Customer         @relation(fields: [customerId], references: [id])
+  type          String
+  stage         String
+  expectedAmount Int
+  actualAmount   Int
+  expectedDate   DateTime?
+  owner          String
+  keyFactor     String
+  risk          String
+  // SQLite 不支持 Json，这里用字符串存储 JSON
+  stageHistory  String
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  activities    Activity[]
+}
+
+model Activity {
+  id         String   @id @default(cuid())
+  ownerId    String?
+  ownerUser  User?    @relation("UserActivities", fields: [ownerId], references: [id])
+  projectId  String
+  project    Project  @relation(fields: [projectId], references: [id])
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id])
+  type       String
+  content    String
+  date       DateTime
+  nextDate   DateTime?
+  nextTask   String
+  owner      String
+  createdAt  DateTime @default(now())
+}
+
+

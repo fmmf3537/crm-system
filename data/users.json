@@ -1,0 +1,31 @@
+[
+  {
+    "id": "admin-initial-id",
+    "username": "admin",
+    "email": "admin@example.com",
+    "password": "$2b$10$5omFvSoBScsvz5G7M1fqBeR3tIXI.q/vYFfC6tRKGkl0jUgwtNXSW",
+    "avatarUrl": "",
+    "name": "系统管理员",
+    "role": "admin",
+    "teamId": "admin-team",
+    "department": "管理",
+    "phone": "",
+    "status": "active",
+    "createdAt": "2026-03-31T00:00:00.000Z",
+    "updatedAt": "2026-03-31T00:00:00.000Z"
+  },
+  {
+    "id": "c6b83486-c768-459a-8f83-ead85da3ee60",
+    "username": "user1",
+    "email": "user1@example.com",
+    "password": "$2b$10$uKRLt4jjVHzf9TJPsSjRH.LzJsgowhXwbTBjMPPmru3/xbjpTLHmK",
+    "name": "test",
+    "role": "sales",
+    "teamId": "",
+    "department": "",
+    "phone": "",
+    "status": "active",
+    "createdAt": "2026-03-31T07:25:59.913Z",
+    "updatedAt": "2026-03-31T07:25:59.913Z"
+  }
+]
