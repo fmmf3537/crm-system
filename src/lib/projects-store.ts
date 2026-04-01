@@ -1,6 +1,7 @@
-import type { Project as PrismaProjectRow } from "@prisma/client"
 import type { Project } from "@/types/project"
 import { prisma } from "@/lib/prisma"
+
+type PrismaProjectRow = Awaited<ReturnType<typeof prisma.project.findMany>>[number]
 
 function parseStageHistory(raw: string): Project["stageHistory"] {
   try {
@@ -86,3 +87,4 @@ export function sortProjectsByUpdatedDesc(projects: Project[]): Project[] {
     (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
   )
 }
+

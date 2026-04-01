@@ -1,6 +1,7 @@
-import type { Activity as PrismaActivityRow } from "@prisma/client"
 import type { Activity } from "@/types/activity"
 import { prisma } from "@/lib/prisma"
+
+type PrismaActivityRow = Awaited<ReturnType<typeof prisma.activity.findMany>>[number]
 
 export async function readActivities(): Promise<Activity[]> {
   const rows = await prisma.activity.findMany({
@@ -45,3 +46,4 @@ export function sortActivitiesByDateDesc(activities: Activity[]): Activity[] {
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
   )
 }
+

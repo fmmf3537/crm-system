@@ -1,6 +1,7 @@
-import type { User as PrismaUserRow } from "@prisma/client"
 import type { User } from "@/types/user"
 import { prisma } from "@/lib/prisma"
+
+type PrismaUserRow = Awaited<ReturnType<typeof prisma.user.findMany>>[number]
 
 export async function readUsers(): Promise<User[]> {
   const rows = await prisma.user.findMany({
@@ -24,7 +25,7 @@ export async function readUsers(): Promise<User[]> {
 }
 
 export async function writeUsers(users: User[]): Promise<void> {
-  // 简单实现：先清空再插入（仅用于管理界面批量写入）
+  // Simple approach: clear then insert (admin bulk write only)
   await prisma.user.deleteMany()
   await prisma.user.createMany({
     data: users.map((u) => ({
@@ -88,4 +89,5 @@ export async function findUserById(id: string): Promise<User | null> {
     updatedAt: u.updatedAt.toISOString(),
   }
 }
+
 

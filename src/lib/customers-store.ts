@@ -1,6 +1,7 @@
-import type { Customer as PrismaCustomerRow } from "@prisma/client"
 import type { Customer } from "@/types/customer"
 import { prisma } from "@/lib/prisma"
+
+type PrismaCustomerRow = Awaited<ReturnType<typeof prisma.customer.findMany>>[number]
 
 export async function readCustomers(): Promise<Customer[]> {
   const rows = await prisma.customer.findMany({
@@ -74,3 +75,4 @@ export function sortByUpdatedDesc(customers: Customer[]): Customer[] {
     (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
   )
 }
+
