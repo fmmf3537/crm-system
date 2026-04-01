@@ -37,8 +37,15 @@ yarn-error.log*
 # local sqlite
 dev.db
 dev.db-journal
+demo.db
+demo.db-journal
 prisma/dev.db
 prisma/dev.db-journal
+prisma/demo-smoke.db
+prisma/demo-smoke.db-journal
+
+# local editor workspace
+*.code-workspace
 
 # vercel
 .vercel
