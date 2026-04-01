@@ -102,7 +102,7 @@ export function UserForm(props: Props) {
   }
 
   async function handleDelete() {
-    if (!props.mode === "edit") return
+    if (props.mode !== "edit") return
     if (!confirm("确定要删除该用户吗？此操作不可撤销。")) return
     setServerError(null)
     setResetInfo(null)
@@ -118,7 +118,7 @@ export function UserForm(props: Props) {
   }
 
   async function handleResetPassword() {
-    if (!props.mode === "edit") return
+    if (props.mode !== "edit") return
     setServerError(null)
     setResetInfo(null)
     startTransition(async () => {
@@ -272,7 +272,7 @@ export function UserForm(props: Props) {
                   <FormItem>
                     <FormLabel>团队 ID（可选）</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input {...field} value={field.value ?? ""} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
