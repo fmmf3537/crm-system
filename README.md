@@ -43,3 +43,41 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Prisma Postgres Setup
+
+This project uses Prisma with PostgreSQL (`provider = "postgresql"`).
+
+1. Configure local environment:
+
+```bash
+cp .env.example .env
+# set DATABASE_URL (and TEST_DATABASE_URL if needed)
+```
+
+2. Create migration from current schema (first time after switching from SQLite):
+
+```bash
+pnpm prisma migrate dev --name init_postgres
+```
+
+3. Generate client and run app:
+
+```bash
+pnpm prisma generate
+pnpm dev
+```
+
+4. Apply migrations in non-dev environments:
+
+```bash
+pnpm prisma migrate deploy
+```
+
+### Vercel Environment Variables
+
+Set these in Vercel Project Settings -> Environment Variables:
+
+- `DATABASE_URL` (required, Production + Preview)
+- `JWT_SECRET` (required)
+- `TEST_DATABASE_URL` (optional; only if you run tests in Vercel/CI)

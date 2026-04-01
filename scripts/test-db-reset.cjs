@@ -1,16 +1,13 @@
-const { existsSync } = require("fs")
-const { rm } = require("fs/promises")
-const path = require("path")
 const { spawnSync } = require("child_process")
 const bcrypt = require("bcryptjs")
 const { PrismaClient } = require("@prisma/client")
 
 const cwd = process.cwd()
-const dbFile = path.join(cwd, "test.db")
-const dbJournal = path.join(cwd, "test.db-journal")
 const env = {
   ...process.env,
-  DATABASE_URL: process.env.TEST_DATABASE_URL || "file:./test.db",
+  DATABASE_URL:
+    process.env.TEST_DATABASE_URL ||
+    "postgresql://postgres:postgres@localhost:5432/crm_test?schema=public",
 }
 
 function run(cmd, args) {
@@ -26,10 +23,7 @@ function run(cmd, args) {
 }
 
 async function main() {
-  if (existsSync(dbFile)) await rm(dbFile, { force: true })
-  if (existsSync(dbJournal)) await rm(dbJournal, { force: true })
-
-  run("npx", ["prisma", "migrate", "deploy"])
+  run("npx", ["prisma", "migrate", "reset", "--force", "--skip-generate"])
   run("node", ["scripts/seed-from-json.cjs"])
 
   const prisma = new PrismaClient({

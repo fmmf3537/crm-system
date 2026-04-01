@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -64,7 +64,7 @@ model Project {
   owner          String
   keyFactor     String
   risk          String
-  // SQLite 不支持 Json，这里用字符串存储 JSON
+  // stored as JSON string for cross-database compatibility
   stageHistory  String
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
