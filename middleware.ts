@@ -1,3 +1,4 @@
+/// <reference path="./jsonwebtoken.d.ts" />
 import { NextResponse, type NextRequest } from "next/server"
 import jwt from "jsonwebtoken"
 
