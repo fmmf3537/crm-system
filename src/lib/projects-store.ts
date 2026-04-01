@@ -1,3 +1,4 @@
+import type { Project as PrismaProjectRow } from "@prisma/client"
 import type { Project } from "@/types/project"
 import { prisma } from "@/lib/prisma"
 
@@ -14,7 +15,7 @@ export async function readProjects(): Promise<Project[]> {
   const rows = await prisma.project.findMany({
     orderBy: { updatedAt: "desc" },
   })
-  return rows.map((p) => ({
+  return rows.map((p: PrismaProjectRow) => ({
     id: p.id,
     ownerId: p.ownerId ?? undefined,
     name: p.name,

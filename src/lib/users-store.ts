@@ -1,3 +1,4 @@
+import type { User as PrismaUserRow } from "@prisma/client"
 import type { User } from "@/types/user"
 import { prisma } from "@/lib/prisma"
 
@@ -5,7 +6,7 @@ export async function readUsers(): Promise<User[]> {
   const rows = await prisma.user.findMany({
     orderBy: { createdAt: "asc" },
   })
-  return rows.map((u) => ({
+  return rows.map((u: PrismaUserRow) => ({
     id: u.id,
     username: u.username,
     email: u.email,

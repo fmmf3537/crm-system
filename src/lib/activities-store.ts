@@ -1,3 +1,4 @@
+import type { Activity as PrismaActivityRow } from "@prisma/client"
 import type { Activity } from "@/types/activity"
 import { prisma } from "@/lib/prisma"
 
@@ -5,7 +6,7 @@ export async function readActivities(): Promise<Activity[]> {
   const rows = await prisma.activity.findMany({
     orderBy: { date: "desc" },
   })
-  return rows.map((a) => ({
+  return rows.map((a: PrismaActivityRow) => ({
     id: a.id,
     ownerId: a.ownerId ?? undefined,
     projectId: a.projectId,
