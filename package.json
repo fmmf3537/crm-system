@@ -11,6 +11,8 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
     "db:seed": "node scripts/seed-from-json.cjs",
+    "db:seed:demo": "node scripts/seed-demo.cjs",
+    "db:seed:demo:reset": "node scripts/seed-demo.cjs --reset",
     "test": "vitest run --coverage",
     "test:watch": "vitest",
     "test:api": "vitest run src/test/api",
